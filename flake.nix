@@ -288,7 +288,7 @@
               --add-flags "$out/share/onetrainer/scripts/train_ui.py" \
               --set PYTHONPATH "$out/share/onetrainer:$out/share/onetrainer/venv/lib/python3.11/site-packages" \
               --run "cd \"\$PWD\"" \
-              --set ONETRAINER_WORKSPACE_DIR "\$PWD" \
+              --run "export ONETRAINER_WORKSPACE_DIR=\"\$(pwd)\"" \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
               --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}" \
