@@ -270,6 +270,15 @@
             # Copy all source files
             cp -r . $out/share/onetrainer/
             
+            # Patch TrainConfig to read workspace_dir from environment variable
+            sed -i 's|"workspace_dir", "workspace/run"|"workspace_dir", os.environ.get("ONETRAINER_WORKSPACE_DIR", "workspace/run")|' \
+              $out/share/onetrainer/modules/util/config/TrainConfig.py
+            
+            # Patch hardcoded directory paths to use current directory
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts") + "/"|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples/|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples") + "/"|g' {} \;
+            
             # Create wrapper scripts for different entry points
             # Copy fonts to share directory
             mkdir -p $out/share/fonts
