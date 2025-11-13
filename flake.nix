@@ -270,6 +270,11 @@
             # Copy all source files
             cp -r . $out/share/onetrainer/
             
+            # Patch OneTrainer to use current working directory instead of installation directory
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|training_concepts/|./training_concepts/|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|training_samples/|./training_samples/|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|training_presets/|./training_presets/|g' {} \;
+            
             # Create wrapper scripts for different entry points
             # Copy fonts to share directory
             mkdir -p $out/share/fonts
