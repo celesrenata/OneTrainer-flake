@@ -270,11 +270,6 @@
             # Copy all source files
             cp -r . $out/share/onetrainer/
             
-            # Patch OneTrainer to use current working directory instead of installation directory
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/|"./training_concepts/|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples/|"./training_samples/|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|"./training_presets"|g' {} \;
-            
             # Create wrapper scripts for different entry points
             # Copy fonts to share directory
             mkdir -p $out/share/fonts
@@ -284,6 +279,7 @@
               --add-flags "$out/share/onetrainer/scripts/train_ui.py" \
               --set PYTHONPATH "$out/share/onetrainer:$out/share/onetrainer/venv/lib/python3.11/site-packages" \
               --run "cd \"\$PWD\"" \
+              --set ONETRAINER_WORKSPACE_DIR "\$PWD" \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
               --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}" \
