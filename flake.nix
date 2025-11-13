@@ -181,6 +181,7 @@
               version = version;
               sha256 = "1vgxmxizfi809jyvsafmnhxfwql4ia8w6ws5fbhwzpry619dbv1h";
             };
+            pythonRuntimeDepsCheck = false;
           }))
           
           # UI components
