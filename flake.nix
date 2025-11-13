@@ -220,8 +220,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "Nerogar";
             repo = "OneTrainer";
-            rev = "ccc050125c65f533a4df5312ed531cb340f10b09";
-            sha256 = "sha256-hwGQB94sr9WFiVONhgNeBdYqCkrJEj/7mgr8WGAAX6o=";
+            rev = "9c67bf9a4a755897acb8de1e650ff8c15776de0d";
+            sha256 = "0wziasi4ajnh5brq60f41pid8bf0r0i69s232kvg0h8iw2z320mv";
           };
           
           nativeBuildInputs = with pkgs; [
