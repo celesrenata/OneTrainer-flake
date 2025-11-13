@@ -278,6 +278,7 @@
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/concepts.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
             
             # Create wrapper scripts for different entry points
             # Copy fonts to share directory
