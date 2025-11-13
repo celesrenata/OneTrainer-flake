@@ -174,7 +174,14 @@
           transformers
           sentencepiece
           onnxruntime
-          diffusers
+          (diffusers.overridePythonAttrs (old: rec {
+            version = "0.35.2";
+            src = pkgs.fetchPypi {
+              pname = "diffusers";
+              version = version;
+              sha256 = "1vgxmxizfi809jyvsafmnhxfwql4ia8w6ws5fbhwzpry619dbv1h";
+            };
+          }))
           
           # UI components
           tkinter
