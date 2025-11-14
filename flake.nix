@@ -281,6 +281,7 @@
             grep -q "^import os" $out/share/onetrainer/modules/util/config/TrainConfig.py || sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
+            grep -q "^import os" $out/share/onetrainer/modules/ui/TopBar.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/TopBar.py
             
             # Simple direct patches
             echo "DEBUG: Patching TrainConfig.py..."
@@ -293,6 +294,9 @@
               $out/share/onetrainer/modules/ui/ConceptTab.py
             sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' \
               $out/share/onetrainer/modules/ui/SamplingTab.py
+            echo "DEBUG: Patching TopBar.py..."
+            sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' \
+              $out/share/onetrainer/modules/ui/TopBar.py
             echo "DEBUG: Patching complete"
             sed -i '/self\.config_dir = config_dir/a\        if self.from_external_file and config_dir and not os.path.isabs(config_dir):\n            workspace_dir = os.environ.get("ONETRAINER_WORKSPACE_DIR", ".")\n            self.config_dir = os.path.join(workspace_dir, config_dir)' \
               $out/share/onetrainer/modules/ui/ConfigList.py
