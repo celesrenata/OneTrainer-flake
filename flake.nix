@@ -285,6 +285,10 @@
             sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
+            # Add debug output to see what paths are being used
+            sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get(\\"ONETRAINER_WORKSPACE_DIR\\", \\".\\"), \\"training_concepts\\", \\"concepts.json\\")}")' \
+              $out/share/onetrainer/modules/util/config/TrainConfig.py
+            
             # Also patch any other files that might have these paths
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
@@ -297,7 +301,10 @@
             makeWrapper ${onetrainer-env}/bin/python $out/bin/onetrainer-ui \
               --add-flags "$out/share/onetrainer/scripts/train_ui.py" \
               --set PYTHONPATH "$out/share/onetrainer:$out/share/onetrainer/venv/lib/python3.11/site-packages" \
+              --run "echo 'DEBUG: Current directory:' \$(pwd)" \
+              --run "echo 'DEBUG: Setting ONETRAINER_WORKSPACE_DIR to:' \$(pwd)" \
               --run "export ONETRAINER_WORKSPACE_DIR=\"\$(pwd)\"" \
+              --run "echo 'DEBUG: ONETRAINER_WORKSPACE_DIR is now:' \$ONETRAINER_WORKSPACE_DIR" \
               --chdir "." \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
