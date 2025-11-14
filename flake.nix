@@ -281,13 +281,13 @@
             grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
             
-            # Apply specific patterns FIRST to avoid interference
+            # Apply specific patterns with word boundaries to avoid double-replacement
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/concepts\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples/samples\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' {} \;
             
-            # Then apply general patterns
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' {} \;
+            # Apply general patterns only for standalone strings (not already replaced)
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
             
             # Create wrapper scripts for different entry points
