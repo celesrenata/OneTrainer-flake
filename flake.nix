@@ -274,10 +274,15 @@
             sed -i 's|"workspace_dir", "workspace/run"|"workspace_dir", os.environ.get("ONETRAINER_WORKSPACE_DIR", "workspace/run")|' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
+            # Add os import if not present
+            sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
+            
             # Patch hardcoded directory paths to use current directory
+            sed -i 's|"training_concepts/concepts.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' \
+              $out/share/onetrainer/modules/util/config/TrainConfig.py
+            sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
+              $out/share/onetrainer/modules/util/config/TrainConfig.py
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/concepts.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
             
             # Create wrapper scripts for different entry points
