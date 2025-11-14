@@ -285,6 +285,16 @@
             sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
+            # Patch ConceptTab.py and SamplingTab.py
+            sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' \
+              $out/share/onetrainer/modules/ui/ConceptTab.py
+            sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' \
+              $out/share/onetrainer/modules/ui/SamplingTab.py
+            
+            # Add os import to these files too
+            grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
+            grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
+            
             # Add debug output to see what paths are being used
             sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get('"'"'ONETRAINER_WORKSPACE_DIR'"'"', '"'"'.'"'"'), '"'"'training_concepts'"'"', '"'"'concepts.json'"'"')}")' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
