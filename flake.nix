@@ -280,6 +280,7 @@
             grep -q "^import os" $out/share/onetrainer/modules/util/config/TrainConfig.py || sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
+            grep -q "^import os" $out/share/onetrainer/modules/ui/ConfigList.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConfigList.py
             
             # Apply specific patterns with word boundaries to avoid double-replacement
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/concepts\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' {} \;
@@ -289,6 +290,11 @@
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
+            
+            # CRITICAL FIX: Patch ConfigList.py to prepend workspace dir to config_dir if it's relative
+            # This ensures that self.config_dir is an absolute path pointing to the workspace
+            sed -i '/self\.config_dir = config_dir/a\        if self.from_external_file and config_dir and not os.path.isabs(config_dir):\n            workspace_dir = os.environ.get("ONETRAINER_WORKSPACE_DIR", ".")\n            self.config_dir = os.path.join(workspace_dir, config_dir)' \
+              $out/share/onetrainer/modules/ui/ConfigList.py
             
             # Create wrapper scripts for different entry points
             # Copy fonts to share directory
