@@ -276,10 +276,12 @@
             sed -i 's|"cache_dir", "workspace-cache/run"|"cache_dir", os.environ.get("ONETRAINER_WORKSPACE_DIR", ".") + "/workspace-cache/run"|' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
-            # Add os import if not already present
+            # Add os import if not already present to all files that need it
             grep -q "^import os" $out/share/onetrainer/modules/util/config/TrainConfig.py || sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
+            grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
+            grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
             
-            # Patch hardcoded directory paths to use environment variable
+            # Patch ALL hardcoded directory paths to use environment variable
             sed -i 's|"training_concepts/concepts.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
@@ -291,17 +293,15 @@
             sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' \
               $out/share/onetrainer/modules/ui/SamplingTab.py
             
-            # Add os import to these files too
-            grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
-            grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
+            # Patch any remaining hardcoded paths in all Python files
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
             
             # Add debug output to see what paths are being used
             sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get('"'"'ONETRAINER_WORKSPACE_DIR'"'"', '"'"'.'"'"'), '"'"'training_concepts'"'"', '"'"'concepts.json'"'"')}")' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
-            
-            # Also patch any other files that might have these paths
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
             
             # Create wrapper scripts for different entry points
             # Copy fonts to share directory
