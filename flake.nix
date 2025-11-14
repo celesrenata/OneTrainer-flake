@@ -273,6 +273,8 @@
             # Patch TrainConfig to read workspace_dir from environment variable
             sed -i 's|"workspace_dir", "workspace/run"|"workspace_dir", os.environ.get("ONETRAINER_WORKSPACE_DIR", "workspace/run")|' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
+            sed -i 's|"cache_dir", "workspace-cache/run"|"cache_dir", os.environ.get("ONETRAINER_WORKSPACE_DIR", ".") + "/workspace-cache/run"|' \
+              $out/share/onetrainer/modules/util/config/TrainConfig.py
             
             # Add os import if not present
             sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
