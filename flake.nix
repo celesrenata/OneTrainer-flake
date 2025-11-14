@@ -277,19 +277,23 @@
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
             # Add os import to files that need it
+            echo "DEBUG: Adding os imports..."
             grep -q "^import os" $out/share/onetrainer/modules/util/config/TrainConfig.py || sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
             
             # Simple direct patches
+            echo "DEBUG: Patching TrainConfig.py..."
             sed -i 's|"training_concepts/concepts\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             sed -i 's|"training_samples/samples\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
+            echo "DEBUG: Patching UI files..."
             sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' \
               $out/share/onetrainer/modules/ui/ConceptTab.py
             sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' \
               $out/share/onetrainer/modules/ui/SamplingTab.py
+            echo "DEBUG: Patching complete"
             sed -i '/self\.config_dir = config_dir/a\        if self.from_external_file and config_dir and not os.path.isabs(config_dir):\n            workspace_dir = os.environ.get("ONETRAINER_WORKSPACE_DIR", ".")\n            self.config_dir = os.path.join(workspace_dir, config_dir)' \
               $out/share/onetrainer/modules/ui/ConfigList.py
             
