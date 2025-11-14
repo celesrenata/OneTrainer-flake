@@ -289,6 +289,10 @@
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
             
+            # Add debug output to ConfigList.py to see what filename is being used
+            sed -i 's|print(f"Failed to load config from {filename}: {e}")|print(f"DEBUG: Trying to load config from: {filename}"); print(f"DEBUG: Current working directory: {os.getcwd()}"); print(f"DEBUG: ONETRAINER_WORKSPACE_DIR: {os.environ.get('"'"'ONETRAINER_WORKSPACE_DIR'"'"', '"'"'NOT SET'"'"')}"); print(f"Failed to load config from {filename}: {e}")|' \
+              $out/share/onetrainer/modules/ui/ConfigList.py
+            
             # Add debug output to see what paths are being used
             sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get('"'"'ONETRAINER_WORKSPACE_DIR'"'"', '"'"'.'"'"'), '"'"'training_concepts'"'"', '"'"'concepts.json'"'"')}")' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
