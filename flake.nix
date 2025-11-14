@@ -281,23 +281,13 @@
             grep -q "^import os" $out/share/onetrainer/modules/ui/ConceptTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/ConceptTab.py
             grep -q "^import os" $out/share/onetrainer/modules/ui/SamplingTab.py || sed -i '1i import os' $out/share/onetrainer/modules/ui/SamplingTab.py
             
-            # Patch ALL hardcoded directory paths to use environment variable
-            sed -i 's|"training_concepts/concepts.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' \
-              $out/share/onetrainer/modules/util/config/TrainConfig.py
-            sed -i 's|"training_samples/samples.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
-              $out/share/onetrainer/modules/util/config/TrainConfig.py
-            
-            # Patch ConceptTab.py and SamplingTab.py
-            sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' \
-              $out/share/onetrainer/modules/ui/ConceptTab.py
-            sed -i 's|config_dir="training_samples"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' \
-              $out/share/onetrainer/modules/ui/SamplingTab.py
-            
-            # Patch any remaining hardcoded paths in all Python files
+            # Patch ALL hardcoded directory paths to use environment variable - be more aggressive
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts/concepts\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples/samples\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_concepts"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_samples"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples")|g' {} \;
             find $out/share/onetrainer -name "*.py" -exec sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' {} \;
-            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
+            find $out/share/onetrainer -name "*.py" -exec sed -i 's|"secrets\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "secrets.json")|g' {} \;
             
             # Add debug output to see what paths are being used
             sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get('"'"'ONETRAINER_WORKSPACE_DIR'"'"', '"'"'.'"'"'), '"'"'training_concepts'"'"', '"'"'concepts.json'"'"')}")' \
