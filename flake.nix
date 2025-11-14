@@ -286,7 +286,7 @@
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
             # Add debug output to see what paths are being used
-            sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get(\\"ONETRAINER_WORKSPACE_DIR\\", \\".\\"), \\"training_concepts\\", \\"concepts.json\\")}")' \
+            sed -i '/concept_file_name.*os.path.join/a\        print(f"DEBUG: concept_file_name will be: {os.path.join(os.environ.get('"'"'ONETRAINER_WORKSPACE_DIR'"'"', '"'"'.'"'"'), '"'"'training_concepts'"'"', '"'"'concepts.json'"'"')}")' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             
             # Also patch any other files that might have these paths
