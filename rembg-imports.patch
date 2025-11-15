@@ -1,6 +1,6 @@
 --- a/modules/ui/CaptionUI.py
 +++ b/modules/ui/CaptionUI.py
-@@ -8,8 +8,12 @@ from modules.module.Blip2Model import Blip2Model
+@@ -8,8 +8,14 @@ from modules.module.Blip2Model import Blip2Model
  from modules.module.BlipModel import BlipModel
  from modules.module.ClipSegModel import ClipSegModel
  from modules.module.MaskByColor import MaskByColor
@@ -15,3 +15,5 @@
 +except Exception:
 +    RembgModel = None
  from modules.module.WDModel import WDModel
+ from modules.ui.GenerateCaptionsWindow import GenerateCaptionsWindow
+ from modules.ui.GenerateMasksWindow import GenerateMasksWindow
