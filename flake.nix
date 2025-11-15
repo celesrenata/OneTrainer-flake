@@ -49,7 +49,9 @@
           postPatch = (oldAttrs.postPatch or "") + ''
             # Disable paramiko import to avoid OpenSSL conflicts
             substituteInPlace pooch/downloaders.py \
-              --replace "import paramiko" "# import paramiko disabled"
+              --replace "try:" "try:" \
+              --replace "    import paramiko" "    pass  # paramiko disabled" \
+              --replace "except ImportError:" "except ImportError:"
           '';
         });
         
