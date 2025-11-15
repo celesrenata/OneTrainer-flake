@@ -310,6 +310,31 @@
               --replace 'frame.grid_columnconfigure(2, weight=1)' \
                         $'frame.grid_columnconfigure(2, weight=1)\n\n        # Add close button on its own row\n        close_button = ctk.CTkButton(frame, text="Close OneTrainer", width=120, height=30, command=self.__close, fg_color="red", hover_color="darkred")\n        close_button.grid(row=1, column=0, columnspan=3, sticky="", padx=10, pady=5)'
             
+            # Add close buttons to CaptionUI (Dataset Tools)
+            substituteInPlace modules/ui/CaptionUI.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+            
+            # Add close buttons to VideoToolUI
+            substituteInPlace modules/ui/VideoToolUI.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+            
+            # Add close buttons to ConvertModelUI
+            substituteInPlace modules/ui/ConvertModelUI.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+            
+            # Add close buttons to SampleWindow
+            substituteInPlace modules/ui/SampleWindow.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+            
+            # Add close buttons to ProfilingWindow
+            substituteInPlace modules/ui/ProfilingWindow.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.withdraw, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+            
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
               --replace 'save_path = self.config.output_model_destination' \
