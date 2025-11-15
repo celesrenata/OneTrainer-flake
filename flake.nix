@@ -334,6 +334,16 @@
             substituteInPlace modules/ui/ProfilingWindow.py \
               --replace 'self.grid_columnconfigure(0, weight=1)' \
                         $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.withdraw, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+        
+            # Add close buttons to GenerateMasksWindow
+            substituteInPlace modules/ui/GenerateMasksWindow.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
+        
+            # Add close buttons to GenerateCaptionsWindow
+            substituteInPlace modules/ui/GenerateCaptionsWindow.py \
+              --replace 'self.grid_columnconfigure(0, weight=1)' \
+                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
