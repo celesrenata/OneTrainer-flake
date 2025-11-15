@@ -161,8 +161,10 @@
           };
         };
         
-        # Override TensorFlow to include RTX 5090 compute capability 12.0
-        tensorflow-rtx5090 = pkgs.python312Packages.tensorflow.overrideAttrs (oldAttrs: {
+        # Override TensorFlow GPU to include RTX 5090 compute capability 12.0
+        tensorflow-rtx5090 = (pkgs.python312Packages.tensorflow.override {
+          cudaSupport = true;
+        }).overrideAttrs (oldAttrs: {
           # Add RTX 5090 compute capability to build configuration
           preBuild = (oldAttrs.preBuild or "") + ''
             export TF_CUDA_COMPUTE_CAPABILITIES="8.6,8.9,9.0,12.0"
