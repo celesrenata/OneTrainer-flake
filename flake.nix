@@ -344,6 +344,9 @@
             echo "DEBUG: Patching TopBar.py..."
             sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' \
               $out/share/onetrainer/modules/ui/TopBar.py
+            # Patch __save_secrets to use workspace directory
+            sed -i 's|write_json_atomic(path,|write_json_atomic(os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), os.path.basename(path)),|g' \
+              $out/share/onetrainer/modules/ui/TopBar.py
             echo "DEBUG: Patching complete"
             
             runHook postInstall
