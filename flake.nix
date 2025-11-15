@@ -195,7 +195,11 @@
           scipy
           matplotlib
           onnxruntime
-          rembg
+          rembg = python.pkgs.rembg.override {
+            pooch = python.pkgs.pooch.override {
+              paramiko = python.pkgs.paramiko;
+            };
+          };
           
           # PyTorch with CUDA support (source-built)
           torch
