@@ -170,7 +170,7 @@
           # ML/AI libraries
           accelerate
           safetensors
-          tensorflowWithCuda
+          (tensorflow.override { cudaSupport = true; })
           tensorboard
           transformers
           sentencepiece
