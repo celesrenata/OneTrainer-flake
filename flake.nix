@@ -305,7 +305,7 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
-            # Add custom title bar at start of TrainUI init using grid
+            # Add custom title bar and shift main content down
             substituteInPlace modules/ui/TrainUI.py \
               --replace 'def __init__(self):' \
                         $'def __init__(self):\n        # Create title bar first\n        self._create_title_bar = True' \
@@ -316,7 +316,15 @@
               --replace 'self.grid_rowconfigure(1, weight=1)' \
                         'self.grid_rowconfigure(1, weight=1)  # main content' \
               --replace 'self.grid_rowconfigure(2, weight=0)' \
-                        'self.grid_rowconfigure(2, weight=0)  # bottom'
+                        'self.grid_rowconfigure(2, weight=0)  # bottom' \
+              --replace 'self.top_bar_component = self.top_bar(self)' \
+                        'self.top_bar_component = self.top_bar(self)' \
+              --replace 'self.top_bar_component.frame.grid(row=0, column=0, sticky="nsew")' \
+                        'self.top_bar_component.frame.grid(row=1, column=0, sticky="nsew")' \
+              --replace 'self.tabview.grid(row=1, column=0, sticky="nsew")' \
+                        'self.tabview.grid(row=2, column=0, sticky="nsew")' \
+              --replace 'self.bottom_bar_component.frame.grid(row=2, column=0, sticky="nsew")' \
+                        'self.bottom_bar_component.frame.grid(row=3, column=0, sticky="nsew")'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
