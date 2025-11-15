@@ -305,26 +305,10 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
-            # Add custom title bar and shift main content down
+            # Add close button to bottom bar
             substituteInPlace modules/ui/TrainUI.py \
-              --replace 'def __init__(self):' \
-                        $'def __init__(self):\n        # Create title bar first\n        self._create_title_bar = True' \
-              --replace 'super().__init__()' \
-                        $'super().__init__()\n        if hasattr(self, "_create_title_bar"):\n            title_frame = ctk.CTkFrame(self, height=30, corner_radius=0, fg_color=("#3B8ED0", "#1F6AA5"))\n            title_frame.grid(row=0, column=0, sticky="ew", padx=0, pady=0)\n            title_frame.grid_columnconfigure(0, weight=1)\n            title_label = ctk.CTkLabel(title_frame, text="OneTrainer", font=("Arial", 12, "bold"), text_color="white")\n            title_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)\n            close_button = ctk.CTkButton(title_frame, text="✕", width=30, height=25, command=self.__close, fg_color="red", hover_color="darkred")\n            close_button.grid(row=0, column=1, sticky="e", padx=5, pady=2)' \
-              --replace 'self.grid_rowconfigure(0, weight=0)' \
-                        'self.grid_rowconfigure(0, weight=0)  # title bar' \
-              --replace 'self.grid_rowconfigure(1, weight=1)' \
-                        'self.grid_rowconfigure(1, weight=1)  # main content' \
-              --replace 'self.grid_rowconfigure(2, weight=0)' \
-                        'self.grid_rowconfigure(2, weight=0)  # bottom' \
-              --replace 'self.top_bar_component = self.top_bar(self)' \
-                        'self.top_bar_component = self.top_bar(self)' \
-              --replace 'self.top_bar_component.frame.grid(row=0, column=0, sticky="nsew")' \
-                        'self.top_bar_component.frame.grid(row=1, column=0, sticky="nsew")' \
-              --replace 'self.tabview.grid(row=1, column=0, sticky="nsew")' \
-                        'self.tabview.grid(row=2, column=0, sticky="nsew")' \
-              --replace 'self.bottom_bar_component.frame.grid(row=2, column=0, sticky="nsew")' \
-                        'self.bottom_bar_component.frame.grid(row=3, column=0, sticky="nsew")'
+              --replace 'frame.grid_columnconfigure(2, weight=1)' \
+                        $'frame.grid_columnconfigure(2, weight=1)\n\n        # Add close button\n        close_button = ctk.CTkButton(frame, text="Close", width=80, height=30, command=self.__close, fg_color="red", hover_color="darkred")\n        close_button.grid(row=0, column=3, sticky="e", padx=10, pady=5)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
