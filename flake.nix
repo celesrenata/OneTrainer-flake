@@ -44,11 +44,17 @@
         # Use Python 3.11 as recommended by OneTrainer
         python = pkgs.python312;
         
-        # Custom Python packages not in nixpkgs
+        # Custom Python packages not in nixpkgs  
+        pooch-no-paramiko = python.pkgs.pooch.overridePythonAttrs (oldAttrs: {
+          postPatch = (oldAttrs.postPatch or "") + ''
+            # Disable paramiko import to avoid OpenSSL conflicts
+            substituteInPlace pooch/downloaders.py \
+              --replace "import paramiko" "# import paramiko disabled"
+          '';
+        });
+        
         rembg-fixed = python.pkgs.rembg.override {
-          pooch = python.pkgs.pooch.override {
-            paramiko = python.pkgs.paramiko;
-          };
+          pooch = pooch-no-paramiko;
         };
         
         dadaptation = python.pkgs.buildPythonPackage rec {
