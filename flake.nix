@@ -294,6 +294,10 @@
               --replace "from modules.module.RembgModel import RembgModel" "# from modules.module.RembgModel import RembgModel" \
               --replace "RembgHumanModel" "type(None)" \
               --replace "RembgModel" "type(None)"
+            
+            # Fix model output paths to use workspace directory
+            find . -name "*.py" -exec sed -i 's|models/model\.safetensors|$ONETRAINER_WORKSPACE_DIR/output/model.safetensors|g' {} \;
+            find . -name "*.py" -exec sed -i 's|"models/|"$ONETRAINER_WORKSPACE_DIR/output/|g' {} \;
           '';
           
           installPhase = ''
