@@ -199,7 +199,7 @@
           accelerate
           safetensors
           tensorflow-rtx5090
-          tensorboard
+          # tensorboard  # Included with tensorflow-rtx5090
           transformers
           sentencepiece
           onnxruntime
