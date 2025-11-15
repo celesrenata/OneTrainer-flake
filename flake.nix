@@ -295,10 +295,15 @@
               --replace "RembgHumanModel" "type(None)" \
               --replace "RembgModel" "type(None)"
             
-            # Fix model output paths to use workspace directory
-            substituteInPlace modules/modelSaver/mixin/LoRASaverMixin.py \
-              --replace 'os.makedirs(Path(destination).parent.absolute(), exist_ok=True)' \
-                        'workspace_dir = os.environ.get("ONETRAINER_WORKSPACE_DIR", "."); dest_path = destination.replace("/nix/store", workspace_dir + "/output") if "/nix/store" in destination else destination; os.makedirs(Path(dest_path).parent.absolute(), exist_ok=True)'
+            # Fix default output_model_destination to use workspace directory
+            substituteInPlace modules/util/config/TrainConfig.py \
+              --replace 'data.append(("output_model_destination", "models/model.safetensors", str, False))' \
+                        'data.append(("output_model_destination", os.environ.get("ONETRAINER_WORKSPACE_DIR", ".") + "/output/model.safetensors", str, False))'
+            
+            # Add os import to TrainConfig.py
+            substituteInPlace modules/util/config/TrainConfig.py \
+              --replace 'from dataclasses import dataclass' \
+                        'import os\nfrom dataclasses import dataclass'
           '';
           
           installPhase = ''
