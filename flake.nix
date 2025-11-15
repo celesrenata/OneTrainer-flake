@@ -322,6 +322,9 @@
               --run "echo 'DEBUG: Setting ONETRAINER_WORKSPACE_DIR to:' \$(pwd)" \
               --run "export ONETRAINER_WORKSPACE_DIR=\"\$(pwd)\"" \
               --run "echo 'DEBUG: ONETRAINER_WORKSPACE_DIR is now:' \$ONETRAINER_WORKSPACE_DIR" \
+              --run "mkdir -p training_concepts training_samples training_presets" \
+              --run "[ ! -f training_concepts/concepts.json ] && echo '[]' > training_concepts/concepts.json || true" \
+              --run "[ ! -f training_samples/samples.json ] && echo '[]' > training_samples/samples.json || true" \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
               --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}" \
