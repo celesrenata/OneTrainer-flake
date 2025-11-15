@@ -9,12 +9,27 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        # Overlay to ensure consistent OpenSSL version across all packages
+        openssl-overlay = final: prev: {
+          python312Packages = prev.python312Packages.override {
+            overrides = python-final: python-prev: {
+              cryptography = python-prev.cryptography.override {
+                openssl = final.openssl_3_6;
+              };
+              paramiko = python-prev.paramiko.override {
+                cryptography = python-final.cryptography;
+              };
+            };
+          };
+        };
+        
         pkgs = import nixpkgs {
           inherit system;
           config = {
             allowUnfree = true;
             cudaSupport = true;
           };
+          overlays = [ openssl-overlay ];
         };
         
         # Use Python 3.11 as recommended by OneTrainer
