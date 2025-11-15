@@ -336,6 +336,9 @@
               --set PYTHONPATH "$out/share/onetrainer:${onetrainer-env}/lib/python3.12/site-packages" \
               --set GDK_BACKEND "x11" \
               --set QT_QPA_PLATFORM "xcb" \
+              --set WAYLAND_DISPLAY "" \
+              --set XDG_SESSION_TYPE "x11" \
+              --set DISPLAY ":0" \
               --run "echo 'DEBUG: Killing any existing TensorBoard processes...'" \
               --run "pkill -f tensorboard || true" \
               --run "echo 'DEBUG: Current directory:' \$(pwd)" \
