@@ -293,6 +293,8 @@
               --run "[ ! -f \"\$ONETRAINER_WORKSPACE_DIR/training_concepts/concepts.json\" ] && echo '[]' > \"\$ONETRAINER_WORKSPACE_DIR/training_concepts/concepts.json\" || true" \
               --run "[ ! -f \"\$ONETRAINER_WORKSPACE_DIR/training_samples/samples.json\" ] && echo '[]' > \"\$ONETRAINER_WORKSPACE_DIR/training_samples/samples.json\" || true" \
               --run "cp -r $out/share/onetrainer/training_presets/* \"\$ONETRAINER_WORKSPACE_DIR/training_presets/\" 2>/dev/null || true" \
+              --run "echo 'DEBUG: Testing TensorFlow GPU detection...'" \
+              --run "python -c \"import tensorflow as tf; print('TensorFlow version:', tf.__version__); print('GPUs Available:', len(tf.config.list_physical_devices('GPU'))); [print('GPU:', gpu) for gpu in tf.config.list_physical_devices('GPU')]\" || echo 'TensorFlow GPU test failed'" \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
               --set CUDA_HOME "${pkgs.cudaPackages.cudatoolkit}" \
