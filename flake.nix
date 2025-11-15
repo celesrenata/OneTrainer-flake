@@ -43,6 +43,12 @@
         python = pkgs.python312;
         
         # Custom Python packages not in nixpkgs
+        rembg-fixed = python.pkgs.rembg.override {
+          pooch = python.pkgs.pooch.override {
+            paramiko = python.pkgs.paramiko;
+          };
+        };
+        
         dadaptation = python.pkgs.buildPythonPackage rec {
           pname = "dadaptation";
           version = "3.2";
@@ -195,11 +201,7 @@
           scipy
           matplotlib
           onnxruntime
-          rembg = python.pkgs.rembg.override {
-            pooch = python.pkgs.pooch.override {
-              paramiko = python.pkgs.paramiko;
-            };
-          };
+          rembg-fixed
           
           # PyTorch with CUDA support (source-built)
           torch
