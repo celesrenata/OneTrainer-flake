@@ -318,6 +318,9 @@
             # Create legacy onetrainer command that points to UI
             ln -s $out/bin/onetrainer-ui $out/bin/onetrainer
             
+            # SIMPLE TEST - create a test file to see if this runs
+            echo "PATCH TEST EXECUTED" > $out/patch-test.txt
+            
             # Add os import to files that need it
             echo "DEBUG: Adding os imports..."
             grep -q "^import os" $out/share/onetrainer/modules/util/config/TrainConfig.py || sed -i '1i import os' $out/share/onetrainer/modules/util/config/TrainConfig.py
@@ -328,14 +331,10 @@
             
             # Simple direct patches
             echo "DEBUG: Patching TrainConfig.py..."
-            echo "DEBUG: Before patch - TrainConfig.py line 895:"
-            sed -n '895p' $out/share/onetrainer/modules/util/config/TrainConfig.py
             sed -i 's|"training_concepts/concepts\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             sed -i 's|"training_samples/samples\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
-            echo "DEBUG: After patch - TrainConfig.py line 895:"
-            sed -n '895p' $out/share/onetrainer/modules/util/config/TrainConfig.py
             echo "DEBUG: Patching UI files..."
             sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' \
               $out/share/onetrainer/modules/ui/ConceptTab.py
@@ -344,10 +343,6 @@
             echo "DEBUG: Patching TopBar.py..."
             sed -i 's|"training_presets"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_presets")|g' \
               $out/share/onetrainer/modules/ui/TopBar.py
-            echo "DEBUG: Patching ConfigList.py to ensure workspace directory is used..."
-            # Patch ConfigList to make config_dir absolute if it's relative
-            sed -i '/self.config_dir = config_dir/a\        # Ensure config_dir is absolute and uses workspace directory\n        if not os.path.isabs(self.config_dir) and "training_" in self.config_dir:\n            self.config_dir = os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), os.path.basename(self.config_dir))' \
-              $out/share/onetrainer/modules/ui/ConfigList.py
             echo "DEBUG: Patching complete"
             
             runHook postInstall
