@@ -28,6 +28,7 @@
           config = {
             allowUnfree = true;
             cudaSupport = true;
+            permittedInsecurePackages = [ "openssl-1.1.1w" ];
           };
           overlays = [ openssl-overlay ];
         };
