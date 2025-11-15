@@ -188,7 +188,7 @@
           scipy
           matplotlib
           onnxruntime
-          pooch
+          rembg
           
           # PyTorch with CUDA support (source-built)
           torch
