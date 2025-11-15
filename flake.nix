@@ -295,7 +295,10 @@
               --run "cp -r $out/share/onetrainer/training_presets/* \"\$ONETRAINER_WORKSPACE_DIR/training_presets/\" 2>/dev/null || true" \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
-              --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}" \
+              --set CUDA_HOME "${pkgs.cudaPackages.cudatoolkit}" \
+              --set TF_FORCE_GPU_ALLOW_GROWTH "true" \
+              --set TF_GPU_ALLOCATOR "cuda_malloc_async" \
+              --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib" \
               --set FONTCONFIG_FILE "${pkgs.fontconfig.out}/etc/fonts/fonts.conf" \
               --set FONTCONFIG_PATH "${pkgs.fontconfig.out}/etc/fonts:$out/share/fonts" \
               --run "mkdir -p \$HOME/.fonts && cp -n $out/share/fonts/truetype/Roboto-*.ttf \$HOME/.fonts/ 2>/dev/null || true && chmod 644 \$HOME/.fonts/*.ttf \$HOME/.fonts/*.otf 2>/dev/null || true" \
