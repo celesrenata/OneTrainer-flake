@@ -306,12 +306,12 @@
           dontBuild = true;
           
           postPatch = ''
-            # Handle rembg import errors gracefully instead of crashing
+            # Handle rembg import errors gracefully by setting to None on import failure
             substituteInPlace modules/ui/CaptionUI.py \
               --replace "from modules.module.RembgHumanModel import RembgHumanModel" \
-                        "try:\n    from modules.module.RembgHumanModel import RembgHumanModel\nexcept:\n    RembgHumanModel = None" \
+                        "try: from modules.module.RembgHumanModel import RembgHumanModel\nexcept Exception: RembgHumanModel = None" \
               --replace "from modules.module.RembgModel import RembgModel" \
-                        "try:\n    from modules.module.RembgModel import RembgModel\nexcept:\n    RembgModel = None"
+                        "try: from modules.module.RembgModel import RembgModel\nexcept Exception: RembgModel = None"
             
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
