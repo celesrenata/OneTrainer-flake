@@ -292,9 +292,6 @@
           dontBuild = true;
           
           postPatch = ''
-            # Apply patch to handle rembg import errors gracefully
-            patch -p1 < ${./rembg-imports.patch}
-            
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
               --replace 'data.append(("output_model_destination", "models/model.safetensors", str, False))' \
