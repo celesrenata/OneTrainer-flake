@@ -292,6 +292,16 @@
           # Don't build, just install
           dontBuild = true;
           
+          postPatch = ''
+            # Disable problematic RembgHumanModel import that causes paramiko/OpenSSL segfaults
+            substituteInPlace modules/ui/CaptionUI.py \
+              --replace "from modules.module.RembgHumanModel import RembgHumanModel" "# from modules.module.RembgHumanModel import RembgHumanModel"
+            
+            # Comment out RembgHumanModel usage in CaptionUI
+            substituteInPlace modules/ui/CaptionUI.py \
+              --replace "RembgHumanModel" "None  # RembgHumanModel disabled"
+          '';
+          
           installPhase = ''
             runHook preInstall
             
