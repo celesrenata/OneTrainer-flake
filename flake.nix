@@ -304,6 +304,11 @@
             substituteInPlace modules/util/config/TrainConfig.py \
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
+            
+            # Fix GenericTrainer to convert relative paths to workspace paths
+            substituteInPlace modules/trainer/GenericTrainer.py \
+              --replace 'save_path = self.config.output_model_destination' \
+                        'save_path = self.config.output_model_destination; workspace_dir = os.environ.get("ONETRAINER_WORKSPACE_DIR", "."); save_path = os.path.join(workspace_dir, "output", os.path.basename(save_path)) if not os.path.isabs(save_path) and not save_path.startswith(workspace_dir) else save_path'
           '';
           
           installPhase = ''
