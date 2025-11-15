@@ -284,7 +284,7 @@
             
             makeWrapper ${onetrainer-env}/bin/python $out/bin/onetrainer-ui \
               --add-flags "$out/share/onetrainer/scripts/train_ui.py" \
-              --set PYTHONPATH "$out/share/onetrainer:$out/share/onetrainer/venv/lib/python3.11/site-packages" \
+              --set PYTHONPATH "$out/share/onetrainer:${onetrainer-env}/lib/python3.12/site-packages" \
               --run "echo 'DEBUG: Current directory:' \$(pwd)" \
               --run "echo 'DEBUG: Setting ONETRAINER_WORKSPACE_DIR to:' \$(pwd)" \
               --run "export ONETRAINER_WORKSPACE_DIR=\"\$(pwd)\"" \
