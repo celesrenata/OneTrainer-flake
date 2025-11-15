@@ -309,9 +309,9 @@
             # Handle rembg import errors gracefully instead of crashing
             substituteInPlace modules/ui/CaptionUI.py \
               --replace "from modules.module.RembgHumanModel import RembgHumanModel" \
-                        "try: from modules.module.RembgHumanModel import RembgHumanModel; except: RembgHumanModel = None" \
+                        "try:\n    from modules.module.RembgHumanModel import RembgHumanModel\nexcept:\n    RembgHumanModel = None" \
               --replace "from modules.module.RembgModel import RembgModel" \
-                        "try: from modules.module.RembgModel import RembgModel; except: RembgModel = None"
+                        "try:\n    from modules.module.RembgModel import RembgModel\nexcept:\n    RembgModel = None"
             
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
