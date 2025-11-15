@@ -170,6 +170,8 @@
           preBuild = (oldAttrs.preBuild or "") + ''
             export TF_CUDA_COMPUTE_CAPABILITIES="8.6,8.9,9.0,12.0"
           '';
+          # Remove tensorboard from propagated inputs to avoid conflicts
+          propagatedBuildInputs = builtins.filter (pkg: pkg.pname or "" != "tensorboard") oldAttrs.propagatedBuildInputs;
         });
 
         # Create Python environment with CUDA PyTorch and custom TensorFlow
@@ -199,7 +201,7 @@
           accelerate
           safetensors
           tensorflow-rtx5090
-          # tensorboard  # Included with tensorflow-rtx5090
+          tensorboard
           transformers
           sentencepiece
           onnxruntime
