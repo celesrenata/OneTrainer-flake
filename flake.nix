@@ -170,7 +170,7 @@
           # ML/AI libraries
           accelerate
           safetensors
-          pkgs.python312Packages.tensorflowWithCuda
+          tensorflowWithCuda
           tensorboard
           transformers
           sentencepiece
