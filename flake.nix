@@ -318,6 +318,10 @@
               --set TF_CUDA_COMPUTE_CAPABILITIES "8.6,8.9,9.0,12.0" \
               --set CUDA_CACHE_DISABLE "1" \
               --set TF_CPP_MIN_LOG_LEVEL "1" \
+              --set OPENSSL_CONF "" \
+              --set OPENSSL_ENGINES "" \
+              --unset SSL_CERT_FILE \
+              --unset SSL_CERT_DIR \
               --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib" \
               --set FONTCONFIG_FILE "${pkgs.fontconfig.out}/etc/fonts/fonts.conf" \
               --set FONTCONFIG_PATH "${pkgs.fontconfig.out}/etc/fonts:$out/share/fonts" \
