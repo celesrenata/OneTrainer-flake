@@ -170,6 +170,7 @@
           # ML/AI libraries
           accelerate
           safetensors
+          tensorflow
           tensorboard
           transformers
           sentencepiece
