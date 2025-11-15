@@ -9,32 +9,16 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # Overlay to ensure consistent OpenSSL version across all packages
+        # Overlay to use OpenSSL 1.1 to avoid FIPS X25519 issues
         openssl-overlay = final: prev: {
           python312Packages = prev.python312Packages.override {
             overrides = python-final: python-prev: {
               cryptography = python-prev.cryptography.override {
-                openssl = final.openssl_3_6;
+                openssl = final.openssl_1_1;
               };
-              pooch = python-prev.pooch.overridePythonAttrs (oldAttrs: {
-                postPatch = (oldAttrs.postPatch or "") + ''
-                  # Disable paramiko import to avoid OpenSSL conflicts
-                  substituteInPlace pooch/downloaders.py \
-                    --replace "    import paramiko" "    pass  # paramiko disabled"
-                '';
-              });
               paramiko = python-prev.paramiko.override {
                 cryptography = python-final.cryptography;
-              }.overrideAttrs (oldAttrs: {
-                postPatch = (oldAttrs.postPatch or "") + ''
-                  # Fix X25519 InternalError crash - catch both UnsupportedAlgorithm and InternalError
-                  substituteInPlace paramiko/kex_curve25519.py \
-                    --replace "from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey" \
-                              "from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey\nfrom cryptography.exceptions import InternalError" \
-                    --replace "except UnsupportedAlgorithm:" \
-                              "except (UnsupportedAlgorithm, InternalError):"
-                '';
-              });
+              };
             };
           };
         };
