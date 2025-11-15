@@ -18,7 +18,14 @@
               };
               paramiko = python-prev.paramiko.override {
                 cryptography = python-final.cryptography;
-              };
+              }.overrideAttrs (oldAttrs: {
+                postPatch = (oldAttrs.postPatch or "") + ''
+                  # Fix X25519 InternalError crash - catch cryptography.exceptions.InternalError
+                  substituteInPlace paramiko/kex_curve25519.py \
+                    --replace "X25519PrivateKey.generate()" \
+                              "try: X25519PrivateKey.generate(); return True; except Exception: return False"
+                '';
+              });
             };
           };
         };
