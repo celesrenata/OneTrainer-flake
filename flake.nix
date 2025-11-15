@@ -161,20 +161,74 @@
           };
         };
         
-        # Build TensorFlow from source with RTX 5090 compute capability 12.0 support
-        tensorflow-rtx5090 = pkgs.python312Packages.tensorflow.overrideAttrs (oldAttrs: {
-          # Override the CUDA compute capabilities to include RTX 5090 (12.0)
-          preConfigure = (oldAttrs.preConfigure or "") + ''
-            export TF_CUDA_COMPUTE_CAPABILITIES="8.6,8.9,9.0,12.0"
-            export TF_NEED_CUDA=1
+        # Build latest TensorFlow 2.20.0 from source with RTX 5090 compute capability 12.0 support
+        tensorflow-rtx5090 = pkgs.python312Packages.buildPythonPackage rec {
+          pname = "tensorflow-gpu";
+          version = "2.20.0";
+          pyproject = true;
+          
+          src = pkgs.fetchFromGitHub {
+            owner = "tensorflow";
+            repo = "tensorflow";
+            rev = "v${version}";
+            hash = "sha256-nGWQ+T5FmL+hZucbjQlCRTJM1i//gSzua1QxcBFeqwM=";
+          };
+          
+          build-system = with pkgs.python312Packages; [ setuptools wheel ];
+          
+          nativeBuildInputs = with pkgs; [
+            bazel_7
+            python312Packages.pip
+            cudaPackages.cudatoolkit
+            cudaPackages.cudnn
+            clang
+            gcc
+          ];
+          
+          buildInputs = with pkgs; [
+            cudaPackages.cudatoolkit
+            cudaPackages.cudnn
+            stdenv.cc.cc.lib
+          ];
+          
+          postPatch = ''
+            # Update .bazelversion to accept current Bazel version
+            echo "7.6.0" > .bazelversion
           '';
           
-          # Ensure CUDA support is enabled
-          cudaSupport = true;
+          configurePhase = ''
+            export TF_NEED_CUDA=1
+            export TF_CUDA_COMPUTE_CAPABILITIES="8.6,8.9,9.0,12.0"
+            export TF_CUDA_VERSION=${pkgs.cudaPackages.cudatoolkit.version}
+            export TF_CUDNN_VERSION=${pkgs.cudaPackages.cudnn.version}
+            export CUDA_TOOLKIT_PATH=${pkgs.cudaPackages.cudatoolkit}
+            export CUDNN_INSTALL_PATH=${pkgs.cudaPackages.cudnn}
+            export TF_NEED_OPENCL_SYCL=0
+            export TF_NEED_ROCM=0
+            export TF_NEED_MPI=0
+            export TF_SET_ANDROID_WORKSPACE=0
+            export CC_OPT_FLAGS="-march=native -Wno-sign-compare"
+            export TF_CONFIGURE_IOS=0
+            export CLANG_CUDA_COMPILER_PATH=${pkgs.clang}/bin/clang
+            export GCC_HOST_COMPILER_PATH=${pkgs.gcc}/bin/gcc
+            
+            # Configure TensorFlow with proper paths
+            python configure.py
+          '';
           
-          # Add RTX 5090 specific build flags
-          NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -DTENSORFLOW_USE_CUDA_COMPUTE_CAPABILITY_12_0=1";
-        });
+          buildPhase = ''
+            export HOME=$TMPDIR
+            export USER=nixbld
+            mkdir -p $TMPDIR/.cache/bazel
+            
+            bazel build --config=opt --config=cuda //tensorflow/tools/pip_package:build_pip_package
+            ./bazel-bin/tensorflow/tools/pip_package/build_pip_package $TMPDIR/tensorflow_pkg
+          '';
+          
+          installPhase = ''
+            pip install --no-deps --prefix=$out $TMPDIR/tensorflow_pkg/*.whl
+          '';
+        };
 
         # Create Python environment with CUDA PyTorch and custom TensorFlow
         onetrainer-env = python.withPackages (ps: with ps; [
