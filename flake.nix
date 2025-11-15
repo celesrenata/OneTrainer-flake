@@ -369,6 +369,7 @@
             makeWrapper ${onetrainer-env}/bin/python $out/bin/onetrainer-ui \
               --add-flags "$out/share/onetrainer/scripts/train_ui.py" \
               --set PYTHONPATH "$out/share/onetrainer:${onetrainer-env}/lib/python3.12/site-packages" \
+              --set CRYPTOGRAPHY_OPENSSL_NO_LEGACY "1" \
               --set GDK_BACKEND "x11" \
               --set QT_QPA_PLATFORM "xcb" \
               --set WAYLAND_DISPLAY "" \
