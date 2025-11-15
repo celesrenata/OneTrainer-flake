@@ -291,6 +291,7 @@
               --run "mkdir -p \"\$ONETRAINER_WORKSPACE_DIR/training_concepts\" \"\$ONETRAINER_WORKSPACE_DIR/training_samples\" \"\$ONETRAINER_WORKSPACE_DIR/training_presets\"" \
               --run "[ ! -f \"\$ONETRAINER_WORKSPACE_DIR/training_concepts/concepts.json\" ] && echo '[]' > \"\$ONETRAINER_WORKSPACE_DIR/training_concepts/concepts.json\" || true" \
               --run "[ ! -f \"\$ONETRAINER_WORKSPACE_DIR/training_samples/samples.json\" ] && echo '[]' > \"\$ONETRAINER_WORKSPACE_DIR/training_samples/samples.json\" || true" \
+              --run "cp -r $out/share/onetrainer/training_presets/* \"\$ONETRAINER_WORKSPACE_DIR/training_presets/\" 2>/dev/null || true" \
               --set HF_HUB_DISABLE_XET "1" \
               --set CUDA_PATH "${pkgs.cudaPackages.cudatoolkit}" \
               --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}" \
