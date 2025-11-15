@@ -2,7 +2,7 @@
   description = "OneTrainer - A comprehensive tool for training diffusion models";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -146,7 +146,22 @@
           };
         };
         
-        # Create Python environment with CUDA PyTorch
+        # Build TensorFlow from source with RTX 5090 compute capability 12.0 support
+        tensorflow-rtx5090 = pkgs.python312Packages.tensorflow.overrideAttrs (oldAttrs: {
+          # Override the CUDA compute capabilities to include RTX 5090 (12.0)
+          preConfigure = (oldAttrs.preConfigure or "") + ''
+            export TF_CUDA_COMPUTE_CAPABILITIES="8.6,8.9,9.0,12.0"
+            export TF_NEED_CUDA=1
+          '';
+          
+          # Ensure CUDA support is enabled
+          cudaSupport = true;
+          
+          # Add RTX 5090 specific build flags
+          NIX_CFLAGS_COMPILE = (oldAttrs.NIX_CFLAGS_COMPILE or "") + " -DTENSORFLOW_USE_CUDA_COMPUTE_CAPABILITY_12_0=1";
+        });
+
+        # Create Python environment with CUDA PyTorch and custom TensorFlow
         onetrainer-env = python.withPackages (ps: with ps; [
           # Build essentials
           pip
@@ -170,7 +185,7 @@
           # ML/AI libraries
           accelerate
           safetensors
-          tensorflowWithCuda
+          tensorflow-rtx5090
           tensorboard
           transformers
           sentencepiece
