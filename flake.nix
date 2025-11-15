@@ -296,8 +296,9 @@
               --replace "RembgModel" "type(None)"
             
             # Fix model output paths to use workspace directory
-            find . -name "*.py" -exec sed -i 's|models/model\.safetensors|$ONETRAINER_WORKSPACE_DIR/output/model.safetensors|g' {} \;
-            find . -name "*.py" -exec sed -i 's|"models/|"$ONETRAINER_WORKSPACE_DIR/output/|g' {} \;
+            substituteInPlace modules/modelSaver/mixin/LoRASaverMixin.py \
+              --replace 'os.makedirs(Path(destination).parent.absolute(), exist_ok=True)' \
+                        'workspace_dir = os.environ.get("ONETRAINER_WORKSPACE_DIR", "."); dest_path = destination.replace("/nix/store", workspace_dir + "/output") if "/nix/store" in destination else destination; os.makedirs(Path(dest_path).parent.absolute(), exist_ok=True)'
           '';
           
           installPhase = ''
