@@ -1,0 +1,17 @@
+--- a/modules/ui/CaptionUI.py
++++ b/modules/ui/CaptionUI.py
+@@ -8,8 +8,12 @@ from modules.module.Blip2Model import Blip2Model
+ from modules.module.BlipModel import BlipModel
+ from modules.module.ClipSegModel import ClipSegModel
+ from modules.module.MaskByColor import MaskByColor
+-from modules.module.RembgHumanModel import RembgHumanModel
+-from modules.module.RembgModel import RembgModel
++try:
++    from modules.module.RembgHumanModel import RembgHumanModel
++except Exception:
++    RembgHumanModel = None
++try:
++    from modules.module.RembgModel import RembgModel
++except Exception:
++    RembgModel = None
+ from modules.module.WDModel import WDModel
