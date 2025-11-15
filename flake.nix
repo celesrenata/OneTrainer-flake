@@ -337,13 +337,13 @@
         
             # Add close buttons to GenerateMasksWindow
             substituteInPlace modules/ui/GenerateMasksWindow.py \
-              --replace 'self.frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)' \
-                        $'self.frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)\n\n        # Add close button\n        close_button = ctk.CTkButton(self, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, sticky="", padx=10, pady=5)'
+              --replace 'self.after(100, lambda: set_window_icon(self))' \
+                        $'self.after(100, lambda: set_window_icon(self))\n\n        # Add close button to frame\n        close_button = ctk.CTkButton(self.frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, columnspan=2, sticky="", padx=10, pady=10)'
         
             # Add close buttons to GenerateCaptionsWindow
             substituteInPlace modules/ui/GenerateCaptionsWindow.py \
-              --replace 'self.frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)' \
-                        $'self.frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)\n\n        # Add close button\n        close_button = ctk.CTkButton(self, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, sticky="", padx=10, pady=5)'
+              --replace 'self.after(100, lambda: set_window_icon(self))' \
+                        $'self.after(100, lambda: set_window_icon(self))\n\n        # Add close button to frame\n        close_button = ctk.CTkButton(self.frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, columnspan=2, sticky="", padx=10, pady=10)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
