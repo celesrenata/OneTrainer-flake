@@ -305,10 +305,10 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
-            # Fix TrainUI to force window decorations after CustomTkinter setup
+            # Add custom title bar with close button to TrainUI
             substituteInPlace modules/ui/TrainUI.py \
-              --replace 'self.after(100, lambda: self._set_icon())' \
-                        $'self.after(100, lambda: self._set_icon())\n        self.after(200, lambda: (self.overrideredirect(False), self.wm_attributes("-type", "normal")))'
+              --replace 'self.grid_rowconfigure(0, weight=0)' \
+                        $'# Add custom title bar\n        title_frame = ctk.CTkFrame(self, height=30, corner_radius=0)\n        title_frame.grid(row=0, column=0, sticky="ew", padx=0, pady=0)\n        title_frame.grid_columnconfigure(0, weight=1)\n        title_label = ctk.CTkLabel(title_frame, text="OneTrainer", font=("Arial", 12, "bold"))\n        title_label.grid(row=0, column=0, sticky="w", padx=10)\n        close_button = ctk.CTkButton(title_frame, text="✕", width=30, height=25, command=self.__close)\n        close_button.grid(row=0, column=1, sticky="e", padx=5, pady=2)\n        self.grid_rowconfigure(0, weight=0)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
