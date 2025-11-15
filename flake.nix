@@ -334,6 +334,8 @@
             makeWrapper ${onetrainer-env}/bin/python $out/bin/onetrainer-ui \
               --add-flags "$out/share/onetrainer/scripts/train_ui.py" \
               --set PYTHONPATH "$out/share/onetrainer:${onetrainer-env}/lib/python3.12/site-packages" \
+              --set GDK_BACKEND "x11" \
+              --set QT_QPA_PLATFORM "xcb" \
               --run "echo 'DEBUG: Killing any existing TensorBoard processes...'" \
               --run "pkill -f tensorboard || true" \
               --run "echo 'DEBUG: Current directory:' \$(pwd)" \
