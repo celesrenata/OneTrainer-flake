@@ -163,15 +163,14 @@
         };
         
         # Override TensorFlow GPU to include RTX 5090 compute capability 12.0
-        tensorflow-rtx5090 = (pkgs.python312Packages.tensorflow.override {
-          cudaSupport = true;
-        }).overrideAttrs (oldAttrs: {
+        tensorflow-rtx5090 = pkgs.python312Packages.tensorflow.overridePythonAttrs (oldAttrs: {
           # Add RTX 5090 compute capability to build configuration
           preBuild = (oldAttrs.preBuild or "") + ''
             export TF_CUDA_COMPUTE_CAPABILITIES="8.6,8.9,9.0,12.0"
           '';
-          # Remove tensorboard from propagated inputs to avoid conflicts
-          propagatedBuildInputs = builtins.filter (pkg: pkg.pname or "" != "tensorboard") oldAttrs.propagatedBuildInputs;
+          # Remove tensorboard dependency completely
+          dependencies = builtins.filter (dep: dep.pname or "" != "tensorboard") (oldAttrs.dependencies or []);
+          propagatedBuildInputs = builtins.filter (pkg: pkg.pname or "" != "tensorboard") (oldAttrs.propagatedBuildInputs or []);
         });
 
         # Create Python environment with CUDA PyTorch and custom TensorFlow
