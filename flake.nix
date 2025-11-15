@@ -285,10 +285,14 @@
             
             # Simple direct patches
             echo "DEBUG: Patching TrainConfig.py..."
+            echo "DEBUG: Before patch - TrainConfig.py line 895:"
+            sed -n '895p' $out/share/onetrainer/modules/util/config/TrainConfig.py
             sed -i 's|"training_concepts/concepts\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts", "concepts.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
             sed -i 's|"training_samples/samples\.json"|os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_samples", "samples.json")|g' \
               $out/share/onetrainer/modules/util/config/TrainConfig.py
+            echo "DEBUG: After patch - TrainConfig.py line 895:"
+            sed -n '895p' $out/share/onetrainer/modules/util/config/TrainConfig.py
             echo "DEBUG: Patching UI files..."
             sed -i 's|config_dir="training_concepts"|config_dir=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), "training_concepts")|g' \
               $out/share/onetrainer/modules/ui/ConceptTab.py
