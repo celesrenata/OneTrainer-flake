@@ -305,6 +305,11 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
+            # Fix TrainUI to force window decorations
+            substituteInPlace modules/ui/TrainUI.py \
+              --replace 'super().__init__()' \
+                        'super().__init__()\n        self.overrideredirect(False)\n        self.wm_attributes("-type", "normal")'
+            
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
               --replace 'save_path = self.config.output_model_destination' \
