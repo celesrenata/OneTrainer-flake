@@ -16,6 +16,13 @@
               cryptography = python-prev.cryptography.override {
                 openssl = final.openssl_3_6;
               };
+              pooch = python-prev.pooch.overridePythonAttrs (oldAttrs: {
+                postPatch = (oldAttrs.postPatch or "") + ''
+                  # Disable paramiko import to avoid OpenSSL conflicts
+                  substituteInPlace pooch/downloaders.py \
+                    --replace "    import paramiko" "    pass  # paramiko disabled"
+                '';
+              });
               paramiko = python-prev.paramiko.override {
                 cryptography = python-final.cryptography;
               }.overrideAttrs (oldAttrs: {
@@ -45,20 +52,6 @@
         python = pkgs.python312;
         
         # Custom Python packages not in nixpkgs  
-        pooch-no-paramiko = python.pkgs.pooch.overridePythonAttrs (oldAttrs: {
-          postPatch = (oldAttrs.postPatch or "") + ''
-            # Disable paramiko import to avoid OpenSSL conflicts
-            substituteInPlace pooch/downloaders.py \
-              --replace "try:" "try:" \
-              --replace "    import paramiko" "    pass  # paramiko disabled" \
-              --replace "except ImportError:" "except ImportError:"
-          '';
-        });
-        
-        rembg-fixed = python.pkgs.rembg.override {
-          pooch = pooch-no-paramiko;
-        };
-        
         dadaptation = python.pkgs.buildPythonPackage rec {
           pname = "dadaptation";
           version = "3.2";
@@ -211,7 +204,7 @@
           scipy
           matplotlib
           onnxruntime
-          rembg-fixed
+          rembg
           
           # PyTorch with CUDA support (source-built)
           torch
