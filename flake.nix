@@ -2,7 +2,7 @@
   description = "OneTrainer - A comprehensive tool for training diffusion models";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -30,7 +30,7 @@
             sha256 = "sha256-3o6CidVr/e4MjjyjUxQyldikg2O8sC1oaKcINUtHzMA=";
           };
           build-system = with python.pkgs; [ setuptools ];
-          dependencies = with python.pkgs; [ pytorch ];
+          dependencies = with python.pkgs; [ torch ];
           meta = with pkgs.lib; {
             description = "D-Adaptation optimizer for PyTorch";
             homepage = "https://pypi.org/project/dadaptation/";
@@ -47,7 +47,7 @@
             sha256 = "sha256-9u90lEiVybmgBF5V/dBNB72wO58Josd+LsdyydHs4V8=";
           };
           build-system = with python.pkgs; [ setuptools ];
-          dependencies = with python.pkgs; [ pytorch ];
+          dependencies = with python.pkgs; [ torch ];
           meta = with pkgs.lib; {
             description = "Prodigy optimizer for PyTorch";
             homepage = "https://pypi.org/project/prodigyopt/";
@@ -64,7 +64,7 @@
             sha256 = "sha256-ae8lYB0fwNjdAMs2+a94gz+It4RvG7bd7MnxRPPp98s=";
           };
           build-system = with python.pkgs; [ hatchling ];
-          dependencies = with python.pkgs; [ pytorch ];
+          dependencies = with python.pkgs; [ torch ];
           meta = with pkgs.lib; {
             description = "Schedule-free optimizer for PyTorch";
             homepage = "https://pypi.org/project/schedulefree/";
@@ -81,7 +81,7 @@
             sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           };
           build-system = with python.pkgs; [ setuptools ];
-          dependencies = with python.pkgs; [ pillow opencv4 pytorch ];
+          dependencies = with python.pkgs; [ pillow opencv4 torch ];
           meta = with pkgs.lib; {
             description = "Invisible watermark for images";
             homepage = "https://pypi.org/project/invisible-watermark/";
@@ -137,7 +137,7 @@
             sha256 = "sha256-Ai/knqvFWzyRgaDX+7i9pQC3/BlQzMywPBgeH+2DsFc=";
           };
           build-system = with python.pkgs; [ setuptools setuptools-scm ];
-          dependencies = with python.pkgs; [ pyyaml pytorch ];
+          dependencies = with python.pkgs; [ pyyaml torch ];
           env.SETUPTOOLS_SCM_PRETEND_VERSION = version;
           meta = with pkgs.lib; {
             description = "OMI Model Standards";
@@ -179,7 +179,7 @@
           matplotlib
           
           # PyTorch with CUDA support (source-built)
-          pytorch
+          torch
           torchvision
           
           # ML/AI libraries
