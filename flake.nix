@@ -305,10 +305,10 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
-            # Fix TrainUI to force window decorations
+            # Fix TrainUI to force window decorations after CustomTkinter setup
             substituteInPlace modules/ui/TrainUI.py \
-              --replace 'super().__init__()' \
-                        $'super().__init__()\n        self.overrideredirect(False)\n        self.wm_attributes("-type", "normal")'
+              --replace 'self.after(100, lambda: self._set_icon())' \
+                        $'self.after(100, lambda: self._set_icon())\n        self.after(200, lambda: (self.overrideredirect(False), self.wm_attributes("-type", "normal")))'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
