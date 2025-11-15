@@ -187,6 +187,8 @@
           huggingface-hub
           scipy
           matplotlib
+          onnxruntime
+          pooch
           
           # PyTorch with CUDA support (source-built)
           torch
@@ -288,13 +290,6 @@
           dontBuild = true;
           
           postPatch = ''
-            # Disable all problematic Rembg imports that cause paramiko/OpenSSL segfaults
-            substituteInPlace modules/ui/CaptionUI.py \
-              --replace "from modules.module.RembgHumanModel import RembgHumanModel" "# from modules.module.RembgHumanModel import RembgHumanModel" \
-              --replace "from modules.module.RembgModel import RembgModel" "# from modules.module.RembgModel import RembgModel" \
-              --replace "RembgHumanModel" "type(None)" \
-              --replace "RembgModel" "type(None)"
-            
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
               --replace 'data.append(("output_model_destination", "models/model.safetensors", str, False))' \
