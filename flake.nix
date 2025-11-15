@@ -20,10 +20,12 @@
                 cryptography = python-final.cryptography;
               }.overrideAttrs (oldAttrs: {
                 postPatch = (oldAttrs.postPatch or "") + ''
-                  # Fix X25519 InternalError crash - catch cryptography.exceptions.InternalError
+                  # Fix X25519 InternalError crash - catch both UnsupportedAlgorithm and InternalError
                   substituteInPlace paramiko/kex_curve25519.py \
-                    --replace "X25519PrivateKey.generate()" \
-                              "try: X25519PrivateKey.generate(); return True; except Exception: return False"
+                    --replace "from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey" \
+                              "from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey\nfrom cryptography.exceptions import InternalError" \
+                    --replace "except UnsupportedAlgorithm:" \
+                              "except (UnsupportedAlgorithm, InternalError):"
                 '';
               });
             };
