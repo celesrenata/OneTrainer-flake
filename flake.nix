@@ -293,10 +293,12 @@
           dontBuild = true;
           
           postPatch = ''
-            # Disable problematic RembgHumanModel import that causes paramiko/OpenSSL segfaults
+            # Disable all problematic Rembg imports that cause paramiko/OpenSSL segfaults
             substituteInPlace modules/ui/CaptionUI.py \
               --replace "from modules.module.RembgHumanModel import RembgHumanModel" "# from modules.module.RembgHumanModel import RembgHumanModel" \
-              --replace "RembgHumanModel" "type(None)"
+              --replace "from modules.module.RembgModel import RembgModel" "# from modules.module.RembgModel import RembgModel" \
+              --replace "RembgHumanModel" "type(None)" \
+              --replace "RembgModel" "type(None)"
           '';
           
           installPhase = ''
