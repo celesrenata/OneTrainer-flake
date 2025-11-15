@@ -306,14 +306,12 @@
           dontBuild = true;
           
           postPatch = ''
-            # Disable problematic Rembg imports that cause paramiko/OpenSSL segfaults
+            # Handle rembg import errors gracefully instead of crashing
             substituteInPlace modules/ui/CaptionUI.py \
-              --replace "from modules.module.RembgHumanModel import RembgHumanModel" "# from modules.module.RembgHumanModel import RembgHumanModel" \
-              --replace "from modules.module.RembgModel import RembgModel" "# from modules.module.RembgModel import RembgModel" \
-              --replace "isinstance(self.masking_model, RembgHumanModel)" "False" \
-              --replace "isinstance(self.masking_model, RembgModel)" "False" \
-              --replace "RembgHumanModel(default_device, torch.float32)" "None" \
-              --replace "RembgModel(default_device, torch.float32)" "None"
+              --replace "from modules.module.RembgHumanModel import RembgHumanModel" \
+                        "try: from modules.module.RembgHumanModel import RembgHumanModel; except: RembgHumanModel = None" \
+              --replace "from modules.module.RembgModel import RembgModel" \
+                        "try: from modules.module.RembgModel import RembgModel; except: RembgModel = None"
             
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
