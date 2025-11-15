@@ -335,15 +335,15 @@
               --replace 'self.grid_columnconfigure(0, weight=1)' \
                         $'self.grid_columnconfigure(0, weight=1)\n\n        # Add close button\n        close_frame = ctk.CTkFrame(self, corner_radius=0)\n        close_frame.grid(row=99, column=0, sticky="ew", padx=10, pady=5)\n        close_button = ctk.CTkButton(close_frame, text="Close", width=80, height=30, command=self.withdraw, fg_color="red", hover_color="darkred")\n        close_button.pack(pady=5)'
         
-            # Add close buttons to GenerateMasksWindow
+            # Add close buttons to GenerateMasksWindow and fix geometry manager conflict
             substituteInPlace modules/ui/GenerateMasksWindow.py \
-              --replace 'self.after(100, lambda: set_window_icon(self))' \
-                        $'self.after(100, lambda: set_window_icon(self))\n\n        # Add close button to frame\n        close_button = ctk.CTkButton(self.frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, columnspan=2, sticky="", padx=10, pady=10)'
+              --replace 'self.frame.pack(fill="both", expand=True)' \
+                        $'# Add close button to frame\n        close_button = ctk.CTkButton(self.frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, columnspan=2, sticky="", padx=10, pady=10)'
         
-            # Add close buttons to GenerateCaptionsWindow
+            # Add close buttons to GenerateCaptionsWindow and fix geometry manager conflict
             substituteInPlace modules/ui/GenerateCaptionsWindow.py \
-              --replace 'self.after(100, lambda: set_window_icon(self))' \
-                        $'self.after(100, lambda: set_window_icon(self))\n\n        # Add close button to frame\n        close_button = ctk.CTkButton(self.frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, columnspan=2, sticky="", padx=10, pady=10)'
+              --replace 'self.frame.pack(fill="both", expand=True)' \
+                        $'# Add close button to frame\n        close_button = ctk.CTkButton(self.frame, text="Close", width=80, height=30, command=self.destroy, fg_color="red", hover_color="darkred")\n        close_button.grid(row=99, column=0, columnspan=2, sticky="", padx=10, pady=10)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
