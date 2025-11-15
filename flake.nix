@@ -305,10 +305,16 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
-            # Add custom title bar with close button to TrainUI
+            # Add custom title bar and shift content down
             substituteInPlace modules/ui/TrainUI.py \
+              --replace 'self.grid_rowconfigure(0, weight=0)' \
+                        'self.grid_rowconfigure(0, weight=0)  # title bar' \
+              --replace 'self.grid_rowconfigure(1, weight=1)' \
+                        'self.grid_rowconfigure(1, weight=0)  # shifted down' \
+              --replace 'self.grid_rowconfigure(2, weight=0)' \
+                        'self.grid_rowconfigure(2, weight=1)  # main content' \
               --replace 'self.grid_columnconfigure(0, weight=1)' \
-                        $'self.grid_columnconfigure(0, weight=1)\n\n        # Add custom title bar\n        title_frame = ctk.CTkFrame(self, height=30, corner_radius=0)\n        title_frame.grid(row=0, column=0, sticky="ew", padx=0, pady=0)\n        title_frame.grid_columnconfigure(0, weight=1)\n        title_label = ctk.CTkLabel(title_frame, text="OneTrainer", font=("Arial", 12, "bold"))\n        title_label.grid(row=0, column=0, sticky="w", padx=10)\n        close_button = ctk.CTkButton(title_frame, text="✕", width=30, height=25, command=self.__close)\n        close_button.grid(row=0, column=1, sticky="e", padx=5, pady=2)'
+                        $'self.grid_rowconfigure(3, weight=0)  # bottom\n        self.grid_columnconfigure(0, weight=1)\n\n        # Add custom title bar\n        title_frame = ctk.CTkFrame(self, height=30, corner_radius=0, fg_color=("#3B8ED0", "#1F6AA5"))\n        title_frame.grid(row=0, column=0, sticky="ew", padx=0, pady=0)\n        title_frame.grid_columnconfigure(0, weight=1)\n        title_label = ctk.CTkLabel(title_frame, text="OneTrainer", font=("Arial", 12, "bold"), text_color="white")\n        title_label.grid(row=0, column=0, sticky="w", padx=10)\n        close_button = ctk.CTkButton(title_frame, text="✕", width=30, height=25, command=self.__close, fg_color="red", hover_color="darkred")\n        close_button.grid(row=0, column=1, sticky="e", padx=5, pady=2)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
