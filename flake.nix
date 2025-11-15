@@ -305,10 +305,10 @@
               --replace 'from dataclasses import dataclass' \
                         'import os\nfrom dataclasses import dataclass'
             
-            # Add close button to bottom bar in rightmost position
+            # Add close button on its own row in bottom bar
             substituteInPlace modules/ui/TrainUI.py \
               --replace 'frame.grid_columnconfigure(2, weight=1)' \
-                        $'frame.grid_columnconfigure(2, weight=1)\n\n        # Add close button\n        close_button = ctk.CTkButton(frame, text="Close", width=80, height=30, command=self.__close, fg_color="red", hover_color="darkred")\n        close_button.grid(row=0, column=5, sticky="e", padx=10, pady=5)'
+                        $'frame.grid_columnconfigure(2, weight=1)\n\n        # Add close button on its own row\n        close_button = ctk.CTkButton(frame, text="Close OneTrainer", width=120, height=30, command=self.__close, fg_color="red", hover_color="darkred")\n        close_button.grid(row=1, column=0, columnspan=3, sticky="", padx=10, pady=5)'
             
             # Fix GenericTrainer to convert relative paths to workspace paths
             substituteInPlace modules/trainer/GenericTrainer.py \
