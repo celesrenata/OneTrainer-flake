@@ -53,6 +53,23 @@
           };
         };
         
+        # Custom onnxruntime-gpu from PyPI with CUDA support
+        onnxruntime-gpu = python.pkgs.buildPythonPackage rec {
+          pname = "onnxruntime-gpu";
+          version = "1.23.2";
+          format = "wheel";
+          src = pkgs.fetchurl {
+            url = "https://files.pythonhosted.org/packages/6c/d9/b7140a4f1615195938c7e358c0804bb84271f0d6886b5cbf105c6cb58aae/onnxruntime_gpu-${version}-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl";
+            sha256 = "4f2d1f720685d729b5258ec1b36dee1de381b8898189908c98cbeecdb2f2b5c2";
+          };
+          dependencies = with python.pkgs; [ numpy protobuf flatbuffers packaging coloredlogs sympy ];
+          nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+          buildInputs = with pkgs; [ stdenv.cc.cc.lib cudaPackages.cudatoolkit cudaPackages.cudnn ];
+          meta = {
+            description = "ONNX Runtime GPU with CUDA support";
+          };
+        };
+        
         # Custom Python packages not in nixpkgs  
         dadaptation = python.pkgs.buildPythonPackage rec {
           pname = "dadaptation";
@@ -207,7 +224,7 @@
           huggingface-hub
           scipy
           matplotlib
-          onnxruntime
+          onnxruntime-gpu
           rembg
           
           # PyTorch with CUDA support (source-built)
@@ -221,7 +238,6 @@
           tensorboard
           transformers
           sentencepiece
-          onnxruntime
           (diffusers.overridePythonAttrs (old: rec {
             version = "0.35.2";
             src = pkgs.fetchPypi {
