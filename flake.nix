@@ -412,9 +412,8 @@
               --set TF_CPP_MIN_LOG_LEVEL "1" \
               --set OPENSSL_CONF "" \
               --set OPENSSL_ENGINES "" \
-              --unset SSL_CERT_FILE \
-              --unset SSL_CERT_DIR \
-              --set LD_LIBRARY_PATH "${pkgs.lib.makeLibraryPath buildInputs}:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib" \
+              --prefix LD_LIBRARY_PATH : "${customOpenSSL.out}/lib" \
+              --set LD_LIBRARY_PATH "${customOpenSSL.out}/lib:${pkgs.lib.makeLibraryPath buildInputs}:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib" \
               --set FONTCONFIG_FILE "${pkgs.fontconfig.out}/etc/fonts/fonts.conf" \
               --set FONTCONFIG_PATH "${pkgs.fontconfig.out}/etc/fonts:$out/share/fonts" \
               --run "mkdir -p \$HOME/.fonts && cp -n $out/share/fonts/truetype/Roboto-*.ttf \$HOME/.fonts/ 2>/dev/null || true && chmod 644 \$HOME/.fonts/*.ttf \$HOME/.fonts/*.otf 2>/dev/null || true" \
