@@ -310,14 +310,23 @@
           dontBuild = true;
           
           postPatch = ''
-            # Disable paramiko X25519 to avoid OpenSSL FIPS issues
-            cat > modules/module/paramiko_patch.py << 'EOF'
+            # Monkey-patch paramiko before it loads to disable X25519
+            cat > modules/module/paramiko_fix.py << 'EOF'
 import sys
-import paramiko.kex_curve25519
-# Disable X25519 key exchange
-paramiko.kex_curve25519.KexCurve25519.is_available = lambda: False
+from unittest.mock import MagicMock
+
+# Mock the problematic X25519 before paramiko loads
+class FakeX25519:
+    @staticmethod
+    def is_available():
+        return False
+
+sys.modules['paramiko.kex_curve25519'] = MagicMock()
+sys.modules['paramiko.kex_curve25519'].KexCurve25519 = FakeX25519
 EOF
-            sed -i '1i import modules.module.paramiko_patch' modules/module/BaseRembgModel.py
+            
+            # Inject the fix at the very start of BaseRembgModel
+            sed -i '1i import modules.module.paramiko_fix' modules/module/BaseRembgModel.py
             
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
