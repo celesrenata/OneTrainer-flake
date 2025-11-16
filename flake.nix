@@ -17,13 +17,18 @@
           };
         };
         
+        # Custom OpenSSL without FIPS to fix X25519 issues
+        customOpenSSL = pkgs.openssl.overrideAttrs (oldAttrs: {
+          configureFlags = oldAttrs.configureFlags ++ [ "no-fips" ];
+          # Force rebuild by changing pname
+          pname = "openssl-no-fips";
+        });
+        
         # Use Python with packageOverrides for OpenSSL 3.x without FIPS
         python = pkgs.python312.override {
           packageOverrides = self: super: {
             cryptography = super.cryptography.override { 
-              openssl = pkgs.openssl.overrideAttrs (oldAttrs: {
-                configureFlags = oldAttrs.configureFlags ++ [ "no-fips" ];
-              });
+              openssl = customOpenSSL;
             };
             paramiko = super.paramiko.override { 
               cryptography = self.cryptography; 
