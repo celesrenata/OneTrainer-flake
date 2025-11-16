@@ -28,6 +28,12 @@
             paramiko = super.paramiko.override { 
               cryptography = self.cryptography; 
             };
+            pooch = super.pooch.override {
+              paramiko = self.paramiko;
+            };
+            rembg = super.rembg.override {
+              pooch = self.pooch;
+            };
           };
         };
         
