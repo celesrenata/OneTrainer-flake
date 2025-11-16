@@ -43,10 +43,9 @@
             pooch = super.pooch.override {
               paramiko = self.paramiko;
             };
-            rembg = super.rembg.override {
+            rembg = (super.rembg.override {
               pooch = self.pooch;
-            };
-            rembg = super.rembg.overridePythonAttrs (old: {
+            }).overridePythonAttrs (old: {
               propagatedBuildInputs = builtins.map (dep: 
                 if (dep.pname or "") == "onnxruntime" then self.onnxruntime-gpu else dep
               ) (old.propagatedBuildInputs or []);
