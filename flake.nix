@@ -468,6 +468,7 @@ EOF
               --set TF_CUDA_COMPUTE_CAPABILITIES "8.6,8.9,9.0,12.0" \
               --set CUDA_CACHE_DISABLE "1" \
               --set TF_CPP_MIN_LOG_LEVEL "1" \
+              --set PYTORCH_CUDA_ALLOC_CONF "expandable_segments:True,max_split_size_mb:512" \
               --set OPENSSL_CONF "" \
               --set OPENSSL_ENGINES "" \
               --prefix LD_LIBRARY_PATH : "${customOpenSSL.out}/lib" \
