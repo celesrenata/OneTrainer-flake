@@ -46,6 +46,11 @@
             rembg = super.rembg.override {
               pooch = self.pooch;
             };
+            rembg = super.rembg.overridePythonAttrs (old: {
+              propagatedBuildInputs = builtins.map (dep: 
+                if (dep.pname or "") == "onnxruntime" then self.onnxruntime-gpu else dep
+              ) (old.propagatedBuildInputs or []);
+            });
             dask = super.dask.overridePythonAttrs (oldAttrs: {
               doCheck = false;
               propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [ self.numpy self.pandas self.pyarrow ];
