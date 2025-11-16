@@ -174,6 +174,7 @@
         });
 
         # Create Python environment with CUDA PyTorch and custom TensorFlow
+        # Force rebuild to use OpenSSL 1.1 overlay - v2
         onetrainer-env = python.withPackages (ps: with ps; [
           # Build essentials
           pip
