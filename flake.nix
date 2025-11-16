@@ -22,7 +22,7 @@
           packageOverrides = self: super: {
             cryptography = super.cryptography.override { 
               openssl = pkgs.openssl.overrideAttrs (oldAttrs: {
-                configureFlags = oldAttrs.configureFlags ++ [ "--no-fips" ];
+                configureFlags = oldAttrs.configureFlags ++ [ "no-fips" ];
               });
             };
             paramiko = super.paramiko.override { 
