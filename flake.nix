@@ -28,6 +28,9 @@
         python = pkgs.python312.override {
           self = python;
           packageOverrides = self: super: {
+            # Replace all onnxruntime with onnxruntime-gpu
+            onnxruntime = self.onnxruntime-gpu;
+            
             cryptography = super.cryptography.overridePythonAttrs (old: {
               buildInputs = (old.buildInputs or []) ++ [ customOpenSSL ];
               nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.pkg-config ];
