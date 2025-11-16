@@ -41,6 +41,7 @@
             };
             dask = super.dask.overridePythonAttrs (oldAttrs: {
               doCheck = false;
+              propagatedBuildInputs = oldAttrs.propagatedBuildInputs ++ [ self.numpy ];
             });
           };
         };
