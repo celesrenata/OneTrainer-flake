@@ -310,6 +310,15 @@
           dontBuild = true;
           
           postPatch = ''
+            # Disable paramiko X25519 to avoid OpenSSL FIPS issues
+            cat > modules/module/paramiko_patch.py << 'EOF'
+import sys
+import paramiko.kex_curve25519
+# Disable X25519 key exchange
+paramiko.kex_curve25519.KexCurve25519.is_available = lambda: False
+EOF
+            sed -i '1i import modules.module.paramiko_patch' modules/module/BaseRembgModel.py
+            
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
               --replace 'data.append(("output_model_destination", "models/model.safetensors", str, False))' \
