@@ -421,6 +421,8 @@ EOF
               --run "echo 'DEBUG: ONETRAINER_WORKSPACE_DIR is now:' \$ONETRAINER_WORKSPACE_DIR" \
               --run "mkdir -p \"\$ONETRAINER_WORKSPACE_DIR/models\" \"\$ONETRAINER_WORKSPACE_DIR/output\"" \
               --run "export ONETRAINER_MODEL_OUTPUT_DIR=\"\$ONETRAINER_WORKSPACE_DIR/output\"" \
+              --run "mkdir -p \"\$ONETRAINER_WORKSPACE_DIR/.cache/pooch\"" \
+              --run "export POOCH_CACHE_DIR=\"\$ONETRAINER_WORKSPACE_DIR/.cache/pooch\"" \
               --run "mkdir -p \"\$ONETRAINER_WORKSPACE_DIR/training_concepts\" \"\$ONETRAINER_WORKSPACE_DIR/training_samples\" \"\$ONETRAINER_WORKSPACE_DIR/training_presets\"" \
               --run "[ ! -f \"\$ONETRAINER_WORKSPACE_DIR/training_concepts/concepts.json\" ] && echo '[]' > \"\$ONETRAINER_WORKSPACE_DIR/training_concepts/concepts.json\" || true" \
               --run "[ ! -f \"\$ONETRAINER_WORKSPACE_DIR/training_samples/samples.json\" ] && echo '[]' > \"\$ONETRAINER_WORKSPACE_DIR/training_samples/samples.json\" || true" \
