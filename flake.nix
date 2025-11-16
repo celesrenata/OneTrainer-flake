@@ -26,10 +26,17 @@
         
         # Use Python with packageOverrides for OpenSSL 3.x without FIPS
         python = pkgs.python312.override {
+          self = python;
           packageOverrides = self: super: {
-            cryptography = super.cryptography.override { 
-              openssl = customOpenSSL;
-            };
+            cryptography = super.cryptography.overridePythonAttrs (old: {
+              buildInputs = (old.buildInputs or []) ++ [ customOpenSSL ];
+              nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.pkg-config ];
+              preBuild = ''
+                export OPENSSL_DIR="${customOpenSSL.dev}"
+                export OPENSSL_LIB_DIR="${customOpenSSL.out}/lib"
+                export OPENSSL_INCLUDE_DIR="${customOpenSSL.dev}/include"
+              '';
+            });
             paramiko = super.paramiko.override { 
               cryptography = self.cryptography; 
             };
