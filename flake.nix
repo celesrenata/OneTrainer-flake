@@ -41,7 +41,7 @@
             };
             dask = super.dask.overridePythonAttrs (oldAttrs: {
               doCheck = false;
-              propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [ self.numpy ];
+              propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [ self.numpy self.pandas ];
             });
           };
         };
