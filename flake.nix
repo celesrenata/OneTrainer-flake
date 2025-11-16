@@ -28,6 +28,24 @@
         python = pkgs.python312.override {
           self = python;
           packageOverrides = self: super: {
+            # Define onnxruntime-gpu first
+            onnxruntime-gpu = super.buildPythonPackage rec {
+              pname = "onnxruntime-gpu";
+              version = "1.23.2";
+              format = "wheel";
+              src = pkgs.fetchurl {
+                url = "https://files.pythonhosted.org/packages/6c/d9/b7140a4f1615195938c7e358c0804bb84271f0d6886b5cbf105c6cb58aae/onnxruntime_gpu-${version}-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl";
+                sha256 = "4f2d1f720685d729b5258ec1b36dee1de381b8898189908c98cbeecdb2f2b5c2";
+              };
+              dependencies = with self; [ numpy protobuf flatbuffers packaging coloredlogs sympy ];
+              nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+              buildInputs = with pkgs; [ stdenv.cc.cc.lib cudaPackages.cudatoolkit cudaPackages.cudnn ];
+              autoPatchelfIgnoreMissingDeps = [ "libnvinfer.so.10" "libnvonnxparser.so.10" ];
+              meta = {
+                description = "ONNX Runtime GPU with CUDA support";
+              };
+            };
+            
             # Replace all onnxruntime with onnxruntime-gpu
             onnxruntime = self.onnxruntime-gpu;
             
@@ -57,24 +75,6 @@
               doCheck = false;
               propagatedBuildInputs = (oldAttrs.propagatedBuildInputs or []) ++ [ self.numpy self.pandas self.pyarrow ];
             });
-          };
-        };
-        
-        # Custom onnxruntime-gpu from PyPI with CUDA support
-        onnxruntime-gpu = python.pkgs.buildPythonPackage rec {
-          pname = "onnxruntime-gpu";
-          version = "1.23.2";
-          format = "wheel";
-          src = pkgs.fetchurl {
-            url = "https://files.pythonhosted.org/packages/6c/d9/b7140a4f1615195938c7e358c0804bb84271f0d6886b5cbf105c6cb58aae/onnxruntime_gpu-${version}-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl";
-            sha256 = "4f2d1f720685d729b5258ec1b36dee1de381b8898189908c98cbeecdb2f2b5c2";
-          };
-          dependencies = with python.pkgs; [ numpy protobuf flatbuffers packaging coloredlogs sympy ];
-          nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-          buildInputs = with pkgs; [ stdenv.cc.cc.lib cudaPackages.cudatoolkit cudaPackages.cudnn ];
-          autoPatchelfIgnoreMissingDeps = [ "libnvinfer.so.10" "libnvonnxparser.so.10" ];
-          meta = {
-            description = "ONNX Runtime GPU with CUDA support";
           };
         };
         
