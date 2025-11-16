@@ -65,6 +65,7 @@
           dependencies = with python.pkgs; [ numpy protobuf flatbuffers packaging coloredlogs sympy ];
           nativeBuildInputs = [ pkgs.autoPatchelfHook ];
           buildInputs = with pkgs; [ stdenv.cc.cc.lib cudaPackages.cudatoolkit cudaPackages.cudnn ];
+          autoPatchelfIgnoreMissingDeps = [ "libnvinfer.so.10" "libnvonnxparser.so.10" ];
           meta = {
             description = "ONNX Runtime GPU with CUDA support";
           };
