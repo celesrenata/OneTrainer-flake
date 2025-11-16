@@ -14,23 +14,20 @@
           config = {
             allowUnfree = true;
             cudaSupport = true;
-            permittedInsecurePackages = [ "openssl-1.1.1w" ];
           };
         };
         
-        # Use Python with packageOverrides for direct OpenSSL 1.1 control
+        # Use Python with packageOverrides for OpenSSL 3.x without FIPS
         python = pkgs.python312.override {
           packageOverrides = self: super: {
             cryptography = super.cryptography.override { 
-              openssl = pkgs.openssl_1_1; 
+              openssl = pkgs.openssl.overrideAttrs (oldAttrs: {
+                configureFlags = oldAttrs.configureFlags ++ [ "--no-fips" ];
+              });
             };
             paramiko = super.paramiko.override { 
               cryptography = self.cryptography; 
             };
-            # Disable trio tests that fail with OpenSSL 1.1 deprecation warnings
-            trio = super.trio.overridePythonAttrs (oldAttrs: {
-              doCheck = false;
-            });
           };
         };
         
