@@ -39,6 +39,9 @@
             rembg = super.rembg.override {
               pooch = self.pooch;
             };
+            dask = super.dask.overridePythonAttrs (oldAttrs: {
+              doCheck = false;
+            });
           };
         };
         
