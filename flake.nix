@@ -471,7 +471,7 @@ EOF
               --set OPENSSL_CONF "" \
               --set OPENSSL_ENGINES "" \
               --prefix LD_LIBRARY_PATH : "${customOpenSSL.out}/lib" \
-              --set LD_LIBRARY_PATH "${customOpenSSL.out}/lib:${pkgs.lib.makeLibraryPath buildInputs}:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib" \
+              --set LD_LIBRARY_PATH "${customOpenSSL.out}/lib:${pkgs.lib.makeLibraryPath buildInputs}:${pkgs.cudaPackages.cudatoolkit}/lib:${pkgs.cudaPackages.cudnn}/lib:${onetrainer-env}/lib/python3.12/site-packages/onnxruntime/capi" \
               --set FONTCONFIG_FILE "${pkgs.fontconfig.out}/etc/fonts/fonts.conf" \
               --set FONTCONFIG_PATH "${pkgs.fontconfig.out}/etc/fonts:$out/share/fonts" \
               --run "mkdir -p \$HOME/.fonts && cp -n $out/share/fonts/truetype/Roboto-*.ttf \$HOME/.fonts/ 2>/dev/null || true && chmod 644 \$HOME/.fonts/*.ttf \$HOME/.fonts/*.otf 2>/dev/null || true" \
