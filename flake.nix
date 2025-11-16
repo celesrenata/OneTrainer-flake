@@ -332,10 +332,8 @@ EOF
             sed -i 's|path = os.path.join("external", "models", "rembg")|path = os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), ".cache", "rembg")|g' \
               modules/module/BaseRembgModel.py
             
-            # Add debugging to BaseRembgModel
-            sed -i '/def __load_model/a\        print(f"DEBUG: Loading model, device type: {self.device.type}")' modules/module/BaseRembgModel.py
-            sed -i '/import onnxruntime/a\        print(f"DEBUG: ONNX Runtime version: {onnxruntime.__version__}")' modules/module/BaseRembgModel.py
-            sed -i '/import onnxruntime/a\        print(f"DEBUG: Available providers: {onnxruntime.get_available_providers()}")' modules/module/BaseRembgModel.py
+            # Add debugging right after the path definition in __load_model
+            sed -i '/path = os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR"/a\        print(f"DEBUG: ONNX Runtime version: {onnxruntime.__version__}")\n        print(f"DEBUG: Available providers: {onnxruntime.get_available_providers()}")\n        print(f"DEBUG: Device type: {self.device.type}")' modules/module/BaseRembgModel.py
             
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
