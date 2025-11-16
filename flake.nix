@@ -328,6 +328,10 @@ EOF
             # Inject the fix at the very start of BaseRembgModel
             sed -i '1i import modules.module.paramiko_fix' modules/module/BaseRembgModel.py
             
+            # Patch BaseRembgModel to use workspace cache directory
+            sed -i 's|path="external",|path=os.path.join(os.environ.get("ONETRAINER_WORKSPACE_DIR", "."), ".cache", "rembg"),|g' \
+              modules/module/BaseRembgModel.py
+            
             # Fix default output_model_destination to use workspace directory
             substituteInPlace modules/util/config/TrainConfig.py \
               --replace 'data.append(("output_model_destination", "models/model.safetensors", str, False))' \
