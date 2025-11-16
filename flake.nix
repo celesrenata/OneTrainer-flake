@@ -9,20 +9,6 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # Overlay to use OpenSSL 1.1 to avoid FIPS X25519 issues
-        openssl-overlay = final: prev: {
-          python312Packages = prev.python312Packages.override {
-            overrides = python-final: python-prev: {
-              cryptography = python-prev.cryptography.override {
-                openssl = final.openssl_1_1;
-              };
-              paramiko = python-prev.paramiko.override {
-                cryptography = python-final.cryptography;
-              };
-            };
-          };
-        };
-        
         pkgs = import nixpkgs {
           inherit system;
           config = {
@@ -30,11 +16,19 @@
             cudaSupport = true;
             permittedInsecurePackages = [ "openssl-1.1.1w" ];
           };
-          overlays = [ openssl-overlay ];
         };
         
-        # Use Python 3.11 as recommended by OneTrainer
-        python = pkgs.python312;
+        # Use Python with packageOverrides for direct OpenSSL 1.1 control
+        python = pkgs.python312.override {
+          packageOverrides = self: super: {
+            cryptography = super.cryptography.override { 
+              openssl = pkgs.openssl_1_1; 
+            };
+            paramiko = super.paramiko.override { 
+              cryptography = self.cryptography; 
+            };
+          };
+        };
         
         # Custom Python packages not in nixpkgs  
         dadaptation = python.pkgs.buildPythonPackage rec {
