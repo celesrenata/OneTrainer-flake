@@ -27,6 +27,10 @@
             paramiko = super.paramiko.override { 
               cryptography = self.cryptography; 
             };
+            # Disable trio tests that fail with OpenSSL 1.1 deprecation warnings
+            trio = super.trio.overridePythonAttrs (oldAttrs: {
+              doCheck = false;
+            });
           };
         };
         
